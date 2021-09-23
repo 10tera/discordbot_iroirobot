@@ -22,14 +22,14 @@ module.exports = {
             option.setName("categoryid")
                 .setDescription("VCが作成される先のカテゴリIDを入力してください")
                 .setRequired(true)),
-    async execute(interaction,client){
+    execute(interaction,client){
         const channelid=interaction.options.getString("channelid");
         const vcname=interaction.options.getString("vcname");
         const number=String(interaction.options.getInteger("number"));
         const categoryid=interaction.options.getString("categoryid");
         fs.readFile("config.json",{encoding:"utf-8"},(err,file)=>{
             if(err){
-                console.log(err);
+                console.error(err);
                 const embed=new MessageEmbed()
                     .setTitle("ファイルエラー")
                     .setColor("RED")
