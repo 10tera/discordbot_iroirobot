@@ -1,11 +1,13 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const {MessageEmbed}=require("discord.js");
 const fs=require("fs");
 
 module.exports = {
-    data : new SlashCommandBuilder()
-        .setName("vclist")
-        .setDescription("設定された自動VC作成機能のリストを表示します。"),
+    data : {
+        name:"vclist",
+        description:"設定された自動VC作成機能のリストを表示します。",
+        default_permission:false,
+        options:[]
+    },
     execute(interaction,client){
         fs.readFile("config.json",{encoding:"utf-8"},(err,file)=>{
             if(err){

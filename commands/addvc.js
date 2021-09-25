@@ -1,27 +1,38 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
 const {MessageEmbed}=require("discord.js");
 const fs=require("fs");
 
 module.exports = {
-    data : new SlashCommandBuilder()
-        .setName("addvc")
-        .setDescription("自動VC作成コマンド")
-        .addStringOption(option=>
-            option.setName("channelid")
-                .setDescription("VC作成チャンネルのチャンネルIDを入力してください")
-                .setRequired(true))
-        .addStringOption(option=>
-            option.setName("vcname")
-                .setDescription("作られるVCの名前を入力してください")
-                .setRequired(true))
-        .addIntegerOption(option=>
-            option.setName("number")
-                .setDescription("作成されるVCの人数制限数を入力してください")
-                .setRequired(true))
-        .addStringOption(option=>
-            option.setName("categoryid")
-                .setDescription("VCが作成される先のカテゴリIDを入力してください")
-                .setRequired(true)),
+    data : {
+        name:"addvc",
+        description:"自動VC作成コマンド",
+        default_permission:false,
+        options:[
+            {
+                type: 3,
+                name: 'channelid',
+                description: 'VC作成チャンネルのチャンネルIDを入力してください',
+                required: true
+            },
+            {
+                type: 3,
+                name: 'vcname',
+                description: '作られるVCの名前を入力してください',
+                required: true
+            },
+            {
+                type: 4,
+                name: 'number',
+                description: '作成されるVCの人数制限数を入力してください',
+                required: true
+            },
+            {
+                type: 3,
+                name: 'categoryid',
+                description: 'VCが作成される先のカテゴリIDを入力してください',
+                required: true
+            }
+        ]
+    },
     execute(interaction,client){
         const channelid=interaction.options.getString("channelid");
         const vcname=interaction.options.getString("vcname");
@@ -41,7 +52,7 @@ module.exports = {
             configdata.vclist[configdata.vclist.length]=[channelid,vcname,number,categoryid];
             const configtext=JSON.stringify(configdata,undefined,4);
             fs.writeFile("config.json",configtext,{encoding: 'utf-8'},(err2)=>{
-                if(err){
+                if(err2){
                     console.error(err2);
                     const embed=new MessageEmbed()
                         .setTitle("ファイルエラー")
