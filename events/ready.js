@@ -46,6 +46,12 @@ module.exports = {
             }
         );
 
+        console.log("application:");
+        client.application.commands.fetch().then(cmds => console.log(cmds.find(cmd => cmd.name === "addvc").id));
+        console.log("guild");
+        client.guilds.cache.get(guildID)?.commands.fetch().then(cmds => console.log(cmds.find(cmd => cmd.name === "addvc").id));
+
+        console.log(aaa);
 
         console.log("login with "+client.user.tag+" now");
         console.log(`applicationID：${client.application.id}`);
