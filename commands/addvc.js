@@ -5,7 +5,7 @@ module.exports = {
     data : {
         name:"addvc",
         description:"自動VC作成コマンド",
-        default_permission:false,
+        default_permission:true,
         options:[
             {
                 type: 3,

@@ -1,7 +1,7 @@
 const request = require('request');
 
-const applictionid="780729687777083404";
-const guildid="780616269824655421";
+const applictionid="808587584447971328";
+const guildid="731458829774225448";
 const {token}=require("./config.json");
 
 var options={

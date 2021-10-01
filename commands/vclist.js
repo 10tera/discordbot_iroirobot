@@ -5,7 +5,7 @@ module.exports = {
     data : {
         name:"vclist",
         description:"設定された自動VC作成機能のリストを表示します。",
-        default_permission:false,
+        default_permission:true,
         options:[]
     },
     execute(interaction,client){
