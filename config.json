@@ -6,7 +6,8 @@
     "logID": "882132953008844820",
     "commandID": {
         "allteamdelete": "893639198005919775",
-        "teamadmin": "893639198005919779"
+        "teamadmin": "893639198005919779",
+        "teamdeleteadmin": "",
     },
     "vclist": [
         [

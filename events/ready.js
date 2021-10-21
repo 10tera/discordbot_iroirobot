@@ -16,9 +16,6 @@ module.exports = {
         };
         const commands = client.guilds.cache.get(guildID)?.commands;
 
-        //権限関連のみ後回し
-
-
         commands.permissions.set(
             {
                 command:commandID.allteamdelete,
@@ -32,14 +29,12 @@ module.exports = {
                 permissions:[admin_permission,subadmin_permission]
             }
         );
-
-        /*
-        console.log("application:");
-        client.application.commands.fetch().then(cmds => console.log(cmds.find(cmd => cmd.name === "addvc").id));
-        console.log("guild");
-        client.guilds.cache.get(guildID)?.commands.fetch().then(cmds => console.log(cmds.find(cmd => cmd.name === "addvc").id));
-
-         */
+        commands.permissions.set(
+            {
+                command:commandID.teamdeleteadmin,
+                permissions:[admin_permission,subadmin_permission]
+            }
+        );
 
 
         console.log("login with "+client.user.tag+" now");
