@@ -5,7 +5,7 @@ module.exports={
     data:{
         name:"teamdeleteadmin",
         description:"管理者専用チーム申請取り消しコマンド",
-        default_permission:true,
+        default_permission:false,
         options:[
             {
                 type:3,
