@@ -1,98 +1,116 @@
 const fs=require("fs");
+const {kikisenID} = require('../config.json');
 
 module.exports = {
     name:"voiceStateUpdate",
     async execute(oldState,newState,client){
         try{
-            const newChannel = newState.channel;
-            const oldChannel = oldState.channel;
+            const oldchannel=oldState.channel;
+            const newchannel=newState.channel;
 
-            if(newChannel!=null){
-                if(newState.member.user.bot){
-                    if(newChannel.userLimit===3){
-                        await newChannel.setUserLimit(4);
-                    }
+            //移動元に関わらずチャンネル入室時処理
+            if(newchannel!==null){
+                //bot参加時に制限人数を1増やす
+                const user_limit=newchannel.userLimit;
+                if(newState.member.user.bot&&user_limit!==0){
+                    await newchannel.setUserLimit(user_limit+1);
                 }
-            }
-
-
-            if(oldChannel!=null&&oldChannel!=undefined){
-                fs.readFile("config.json",{encoding: "utf-8"},(err,file)=>{
-                    const configdata=JSON.parse(file);
-                    if(oldChannel!=null){
+                fs.readFile("config.json",{encoding:"utf-8"},(err,file)=>{
+                    if(err){
+                        console.error(err.message);
+                    }
+                    else{
+                        const configdata=JSON.parse(file);
+                        //設定されたチャンネルかどうかの判断
+                        let isnewchannel=false;
+                        let newnamebase;
+                        let vclimit;
+                        let to_vc_id;
                         for(const val of configdata.vclist){
-                            if(val[3]===oldChannel.parentId){
-                                if(oldChannel.members.size==0){
-                                    oldChannel.delete();
+                            if(val[0]===newchannel.id){
+                                isnewchannel=true;
+                                newnamebase=val[1];
+                                vclimit=val[2];
+                                to_vc_id=val[3];
+                                break;
+                            }
+                        }
+                        if(isnewchannel!==false){
+                            const allchannels=newchannel.guild.channels.cache.filter(c=>c.type==="GUILD_VOICE"&&String(c.parentId)===to_vc_id&&c.id!==newchannel.id);
+                            let numbers=[];
+                            allchannels.forEach((value,key)=>{
+                                const number=value.name.replace(newnamebase+"-","");
+                                if(number!==""&&!(isNaN(number))){
+                                    numbers.push(Number(number));
+                                }
+                            });
+                            numbers.sort((a,b)=>{
+                                return(a<b?-1:1);
+                            });
+                            let newnumber;
+                            let handan=false;
+                            if(numbers.length===0){
+                                newnumber=1;
+                                handan=true;
+                            }
+                            else{
+                                newnumber=0;
+                                for(const val of numbers){
+                                    if(val===newnumber+1){
+                                        newnumber++;
+                                    }
+                                    else{
+                                        newnumber++;
+                                        handan=true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(handan===false){
+                                newnumber++;
+                            }
+                            let newname=newnamebase+"-"+String(newnumber);
+                            newchannel.guild.channels
+                                .create(newname,{type:"GUILD_VOICE",parent:to_vc_id,userLimit:Number(vclimit)})
+                                .then((channel)=>{
+                                    const mem=newState.member;
+                                    mem.edit({channel:channel.id});
+                                })
+                                .catch(console.error);
+                            newchannel.guild.channels
+                                .create("聞き専-"+newname,{type:"GUILD_TEXT",parent:kikisenID})
+                                .catch(console.error);
+
+                        }
+                    }
+                });
+            }
+            //移動先に関わらずチャンネル退出時処理
+            if(oldchannel!==null){
+                fs.readFile("config.json",{encoding: "utf-8"},(err,file)=>{
+                    if(err){
+                        console.error(err.message);
+                    }
+                    else{
+                        const configdata=JSON.parse(file);
+                        for(const val of configdata.vclist){
+                            if(val[3]===oldchannel.parentId){
+                                if(oldchannel.members.size==0){
+                                    const oldchannelname=oldchannel.name;
+                                    oldchannel.delete();
+                                    const kikisenchannel=oldchannel.guild.channels.cache
+                                        .filter((c)=>c.type==="GUILD_TEXT"&&String(c.parentId)===kikisenID&&c.name==="聞き専-"+oldchannelname);
+
+                                    if(kikisenchannel!==null&&kikisenchannel!==undefined){
+                                        kikisenchannel.forEach((channel)=>{
+                                            channel.delete();
+                                        });
+                                    }
                                     return;
                                 }
                             }
                         }
                     }
-                });
-            }
-            if(newChannel!=null){
-                fs.readFile("config.json",{encoding: "utf-8"},(err,file)=>{
-                    if(err){
-                        console.error(err.message);
-                        return;
-                    }
-                    const configdata=JSON.parse(file);
-                    var newchannelis=false;
-                    for(const val of configdata.vclist){
-                        if(val[0]===newChannel.id){
-                            var newnamebase=val[1];
-                            var vclimit=val[2];
-                            var to_vc_id=val[3];
-                            newchannelis=true;
-                            break;
-                        }
-                    }
-                    if(newchannelis===false){
-                        return;
-                    }
-                    const allchannels=newChannel.guild.channels.cache.filter(c=>c.type==="GUILD_VOICE"&&String(c.parentId)===to_vc_id&&c.id!==newChannel.id);
-                    let numbers=[];
-                    allchannels.forEach(function(value,key){
-                        const number=value.name.replace(newnamebase+"-","");
-                        if(!(number==="")&&!(isNaN(number))){
-                            numbers.push(Number(number));
-                        }
-                    });
-                    numbers.sort(
-                        function(a,b){
-                            return(a<b?-1:1);
-                        });
-                    let newnumber;
-                    let handan=false;
-                    if(numbers.length===0){
-                        newnumber=1;
-                        handan=true;
-                    }
-                    else{
-                        newnumber=0;
-                        for(const val of numbers){
-                            if(val===newnumber+1){
-                                newnumber++;
-                            }
-                            else{
-                                newnumber++;
-                                handan=true;
-                                break;
-                            }
-                        }
-                    }
-                    if(handan===false){
-                        newnumber++;
-                    }
-                    let newname=newnamebase+"-"+String(newnumber);
-                    newChannel.guild.channels
-                        .create(newname,{type:"GUILD_VOICE",parent:to_vc_id,userLimit:Number(vclimit)})
-                        .then((channel)=>{
-                            const mem=newState.member;
-                            mem.edit({channel:channel.id});
-                        })
-                        .catch(console.error);
                 });
             }
         }
