@@ -1,5 +1,6 @@
 const {MessageEmbed}=require("discord.js");
 const fs=require("fs");
+const {custom_member_roleID} = require('../config.json');
 
 module.exports = {
     data:{
@@ -39,6 +40,7 @@ module.exports = {
     },
     execute(interaction,client){
         const team_name=interaction.options.getString("number");
+        const sendmember=interaction.member;
         fs.readFile("config.json",{encoding:"utf-8"},(err,file)=>{
             if(err){
                 console.error(err);
@@ -64,12 +66,21 @@ module.exports = {
                     interaction.reply({embeds:[embed]});
                     return;
                 }
+                if(sendmember!==null){
+                    const sendmember_roles=sendmember.roles;
+                    if(sendmember_roles!==null){
+                        const target_role=sendmember.guild.roles.cache.find(role=>role.id===custom_member_roleID);
+                        if(target_role!==null){
+                            sendmember_roles.remove(target_role);
+                        }
+                    }
+                }
                 const embed=new MessageEmbed()
                     .setTitle("申請削除完了")
                     .setColor("GREEN")
                     .setDescription("固定チームへの申請を削除しました。");
                 interaction.reply({embeds:[embed]});
-                return;
+                return 0;
             })
         });
     }

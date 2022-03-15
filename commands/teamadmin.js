@@ -1,5 +1,6 @@
 const {MessageEmbed}=require("discord.js");
 const fs=require("fs");
+const {custom_member_roleID} = require('../config.json');
 
 module.exports = {
     data:{
@@ -86,6 +87,16 @@ module.exports = {
                         .setDescription("config.jsonを編集出来ませんでした。\nよっぽどこんなエラー起きませんが念のため例外処理しておきます。\n起きたら制作者へ連絡してください。");
                     interaction.reply({embeds:[embed]});
                     return;
+                }
+                const target_member=interaction.guild.members.cache.find(member=>member.id===userid);
+                if(target_member!==null){
+                    const target_member_roles=target_member.roles;
+                    if(target_member_roles!==null){
+                        const target_role=interaction.guild.roles.cache.find(role=>role.id===custom_member_roleID);
+                        if(target_role!==null){
+                            target_member_roles.add(target_role);
+                        }
+                    }
                 }
                 const embed=new MessageEmbed()
                     .setTitle("申請完了")

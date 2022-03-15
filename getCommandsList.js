@@ -1,11 +1,9 @@
 const request = require('request');
+const {token,applicationID,guildID} = require('./config.json');
 
-const applictionid="808587584447971328";
-const guildid="731458829774225448";
-const {token}=require("./config.json");
 
 var options={
-    url:"https://discord.com/api/v8/applications/"+applictionid+"/guilds/"+guildid+"/commands",
+    url:"https://discord.com/api/v8/applications/"+applicationID+"/guilds/"+guildID+"/commands",
     method:"GET",
     headers:{"Authorization": `Bot ${token}`}
 }
