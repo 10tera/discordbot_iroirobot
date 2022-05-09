@@ -5,10 +5,11 @@
     "applicationID": "808587584447971328",
     "logID": "882132953008844820",
     "kikisenID": "907908147082055722",
+    "custom_member_roleID": "",
     "commandID": {
         "allteamdelete": "893639198005919775",
         "teamadmin": "893639198005919779",
-        "teamdeleteadmin": "",
+        "teamdeleteadmin": ""
     },
     "vclist": [
         [
