@@ -4,6 +4,7 @@ module.exports = {
     name: 'ready',
     once: true,
     execute(client) {
+        /*
         const admin_permission={
             id:"731459188605190176",
             type:"ROLE",
@@ -35,6 +36,8 @@ module.exports = {
                 permissions:[admin_permission,subadmin_permission]
             }
         );
+
+         */
 
 
         console.log("login with "+client.user.tag+" now");

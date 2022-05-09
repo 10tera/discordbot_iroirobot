@@ -5,7 +5,7 @@ module.exports={
     data:{
         name:"deletevc",
         description:"VC設定削除コマンド",
-        default_permission:true,
+        default_permission:false,
         options:[
             {
                 type:4,
