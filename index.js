@@ -1,7 +1,7 @@
 const {Client,Collection,Intents,MessageEmbed} = require('discord.js');
 const {token,logID,guildID} = require('./config.json');
 const fs = require('fs');
-const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.GUILD_VOICE_STATES]});
+const client = new Client({intents:[Intents.FLAGS.GUILDS,Intents.FLAGS.GUILD_VOICE_STATES,Intents.FLAGS.GUILD_MEMBERS]});
 
 client.commands=new Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
