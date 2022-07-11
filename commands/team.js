@@ -87,6 +87,7 @@ module.exports = {
                     if(sendmember_roles!==null){
                         const target_role=sendmember.guild.roles.cache.find(role=>role.id===custom_member_roleID);
                         if(target_role!==null){
+                            //
                             sendmember_roles.add(target_role.toString());
                         }
                     }

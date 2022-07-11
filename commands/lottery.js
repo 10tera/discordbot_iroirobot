@@ -78,6 +78,7 @@ module.exports = {
             }
             rnd= Math.floor(Math.random()*member_number.get(roledatas[pick][0]));
             //console.log(roledatas[pick][0]);
+            //謎のエラーが出るときがある
             await interaction.editReply("当選者は..."+member_data[pick][rnd]+"です");
         });
     }
