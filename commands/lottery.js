@@ -62,9 +62,9 @@ module.exports = {
                 data.set(roledata[0],Number(roledata[1])*member_number.get(roledata[0]));
                 totalweight+=data.get(roledata[0]);
             }
-            console.log(member_number);
-            console.log(member_data);
-            console.log(data);
+            //console.log(member_number);
+            //console.log(member_data);
+            //console.log(data);
             let rnd = Math.floor(Math.random()*totalweight);
             let pick=0;
             let i=0;
@@ -77,6 +77,7 @@ module.exports = {
                 i++;
             }
             rnd= Math.floor(Math.random()*member_number.get(roledatas[pick][0]));
+            //console.log(roledatas[pick][0]);
             await interaction.editReply("当選者は..."+member_data[pick][rnd]+"です");
         });
     }
